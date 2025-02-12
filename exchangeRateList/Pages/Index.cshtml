@@ -5,19 +5,14 @@
 }
 <div id="container">
     <div id="LeftPart">
-        <!-- Obsah pro levou část -->
-        <h1>Levá část</h1>
-        <p>Sem můžete vložit obsah pro levou část obrazovky.</p>
     </div>
     <div id="RightPart">
-        <!-- Obsah pro pravou část -->
-        <h1>Pravá část</h1>
-        <p>Sem můžete vložit obsah pro pravou část obrazovky.</p>
     </div>
 </div>
-<div id="LeftPart"></div>
 <script>
-    DownloadJson("https://webapi.developers.erstegroup.com/api/csas/public/sandbox/v2/rates/exchangerates?web-api-key=c52a0682-4806-4903-828f-6cc66508329e", WriteIntoPage)
+        var getUrl = window.location;
+    var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+    DownloadJson(`${baseUrl}tikets?fromDatabase=false`, WriteIntoPage)
         function DownloadJson(url, callback)
     {
         let xhr = new XMLHttpRequest();
@@ -29,11 +24,43 @@
     }
         function WriteIntoPage(urlData){
        LeftPart= document.getElementById("LeftPart");
-       var data ="<ul>";
-       for(kulz of urlData){
-           data += `<li>${kulz}</li>`
+       for(exchange of urlData){
+           var div = document.createElement("div")
+            div.innerHTML = `<p>${exchange.name}</p>`
+            LeftPart.appendChild(div);
+            let innertExchance = exchange;
+            div.addEventListener("click",function(){
+                
+                ReplaceRyghtPart(innertExchance);
+            });
        }
-       data+="</ul>";
-       LeftPart.innerHTML = data;
+       function CreateDiv(atributName,AtributValue){
+        var div = document.createElement("div");
+        div.innerHTML = `${atributName}: ${AtributValue}`;
+        return div;
+       }
+       function ReplaceRyghtPart(exchange){
+           var ryghtPart = document.getElementById("RightPart")
+           ryghtPart.innerHTML = "";
+
+           ryghtPart.appendChild(CreateDiv("amount",exchange.amount));
+           ryghtPart.appendChild(CreateDiv("cnbMid",exchange.cnbMid));
+           ryghtPart.appendChild(CreateDiv("country",exchange.country));
+           ryghtPart.appendChild(CreateDiv("currBuy",exchange.currBuy));
+           ryghtPart.appendChild(CreateDiv("currMid",exchange.currMid));
+           ryghtPart.appendChild(CreateDiv("currSell",exchange.currSell));
+           ryghtPart.appendChild(CreateDiv("ecbMid",exchange.ecbMid));
+           ryghtPart.appendChild(CreateDiv("move",exchange.move));
+           ryghtPart.appendChild(CreateDiv("name",exchange.name));
+           ryghtPart.appendChild(CreateDiv("shortName",exchange.shortName));
+           ryghtPart.appendChild(CreateDiv("valBuy",exchange.valBuy));
+           ryghtPart.appendChild(CreateDiv("valMid",exchange.valMid));
+           ryghtPart.appendChild(CreateDiv("valSell",exchange.valSell));
+           ryghtPart.appendChild(CreateDiv("validFrom",exchange.validFrom));
+           ryghtPart.appendChild(CreateDiv("version",exchange.version));
+
+       }
+
+
     }
 </script>
