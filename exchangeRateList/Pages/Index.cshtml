@@ -1,0 +1,39 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+<div id="container">
+    <div id="LeftPart">
+        <!-- Obsah pro levou část -->
+        <h1>Levá část</h1>
+        <p>Sem můžete vložit obsah pro levou část obrazovky.</p>
+    </div>
+    <div id="RightPart">
+        <!-- Obsah pro pravou část -->
+        <h1>Pravá část</h1>
+        <p>Sem můžete vložit obsah pro pravou část obrazovky.</p>
+    </div>
+</div>
+<div id="LeftPart"></div>
+<script>
+    DownloadJson("https://webapi.developers.erstegroup.com/api/csas/public/sandbox/v2/rates/exchangerates?web-api-key=c52a0682-4806-4903-828f-6cc66508329e", WriteIntoPage)
+        function DownloadJson(url, callback)
+    {
+        let xhr = new XMLHttpRequest();
+        xhr.onload = () => {
+            callback(JSON.parse(xhr.response));
+        }
+        xhr.open("GET", url);
+        xhr.send();
+    }
+        function WriteIntoPage(urlData){
+       LeftPart= document.getElementById("LeftPart");
+       var data ="<ul>";
+       for(kulz of urlData){
+           data += `<li>${kulz}</li>`
+       }
+       data+="</ul>";
+       LeftPart.innerHTML = data;
+    }
+</script>
